@@ -1,0 +1,75 @@
+<% include ../partials/header.ejs%>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-3 text-center">Review Page: <%= campground.name %></h1>
+            <div class="card-body">
+                <div class="caption-full">
+                    <% if (campground.rating === 0) { %>
+                    <h5>
+                        <em>No Reviews Yet.</em>
+                    </h5>
+                    <% } else { %>
+                    <div class="text-center">
+                        <p>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star <% if (campground.rating > 1.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 2.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 3.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 4.5) { %> checked <% } %>"></span>
+                            <em>(Total Reviews: <%= campground.reviews.length %>)</em>
+                        </p>
+                        <p>
+                            <!-- toFixed(2) - Round the average campground to two decimals -->
+                            <span>Current campground rating: <strong><%= campground.rating.toFixed(2) %></strong></span>
+                        </p>
+                        <p>
+                        <h4>All reviews for this campground:</h4>
+                        </p>
+                    </div>
+
+                    <hr style="margin-top: 0;">
+
+                    <% campground.reviews.forEach(function(review){ %>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <%- '<span class="fa fa-star checked"></span>'.repeat(review.rating) %><%- '<span class="fa fa-star"></span>'.repeat(5 - review.rating) %>
+                            <div>Review by: <strong><%= review.author.username %></strong></div>
+                            <span><em><%= review.updatedAt.toDateString() %></em></span>
+                            <p>
+                                <% if(currentUser && review.author.id.equals(currentUser._id)){ %>
+                                <div class="row">
+                                    <a class="btn btn-sm btn-warning ml-3 mr-2" href="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>/edit">Edit</a>
+                                    <form id="delete-form" action="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                                <% } %>
+                            </p>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="card-text" style="text-align: justify; word-wrap: break-word;">
+                                <%= review.text %>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <% }); %>
+                    <% } %>
+
+                    <div>
+                        <!-- some() - Disable the 'Write a New Review' button if the user already created a review for the campground before -->
+                        <a class="btn btn-primary <% if (currentUser && campground.reviews.some(function (review) {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/campgrounds/<%= campground._id %>/reviews/new">
+                            <i class="fas fa-plus"></i> Write a New Review</a>
+                    </div>
+                    <div class="mt-3">
+                        <a href="/campgrounds/<%= campground._id %>">Go back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<% include ../partials/footer.ejs %>

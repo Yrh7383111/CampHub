@@ -1,0 +1,29 @@
+<% include ../partials/header.ejs %>
+
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="card" style="width: 18rem;">
+				<img src="<%= user.avatar %>" class="card-img-top" alt="user profile image">
+				<div class="card-body">
+					<h5 class="card-title">Email</h5>
+					<p class="card-text">
+						<a href="mailto:<%= user.email %>"><%= user.email %></a>
+					</p>
+					<a href="/follow/<%= user.id %>"><button class="btn btn-primary">Follow <%= user.username %></button></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-8">
+			<h3><%= user.username %>'s Campgrounds:</h3>
+			<ul>
+			<% campgrounds.forEach(function(campground) { %>
+				<li><a href="/campgrounds/<%= campground.id %>"><%= campground.name %></a></li>
+			<% }); %>
+			</ul>
+		</div>
+	</div>
+
+
+<% include ../partials/footer.ejs %>
