@@ -47,7 +47,7 @@ router.post("/register", async function(req, res)
     });
 
     // Admin User Role Authorization
-    if(req.body.adminCode === "secretcode")
+    if (req.body.adminCode === "secretcode")
     {
         newUser.isAdmin = true;
     }
@@ -85,7 +85,7 @@ router.get("/login", function(req, res)
 
 
 // Login logic
-router.post("/login", passport.authenticate("local",                      // "passport.authenticate()" - Middleware
+router.post("/login", passport.authenticate("local",                // "passport.authenticate()" - Middleware
     // Functionality:
     // compare the user input from "login.ejs",
     // and then compare with the data in the databased
@@ -99,9 +99,9 @@ router.post("/login", passport.authenticate("local",                      // "pa
 // Invoke "app.get("/logout", function(req, res)"
 router.get("/logout", function(req, res)
 {
-    req.logout();                                                               // "req.logout()" - function from "passport" package
+    req.logout();                                                                           // "req.logout()" - function from "passport" package
     req.flash("success", "Your account was successfully logged out.");          // req.flash(Key, Value)
-                                                                                // Add some one-time use data before redirecting to the route
+                                                                                           // Add some one-time use data before redirecting to the route
     // Invoke "app.get("/campgrounds", function(req, res)"
     // and then direct to "index.ejs" in "campgrounds" directory
     res.redirect("/campgrounds");
@@ -114,7 +114,7 @@ router.get("/users/:id", async function(req, res)
     try
     {
         const foundUser = await User.findById(req.params.id).populate("followers");
-        if(!foundUser)
+        if (!foundUser)
         {
             req.flash("error", "User not found");
             return res.redirect("back");
@@ -123,7 +123,7 @@ router.get("/users/:id", async function(req, res)
         try
         {
             const foundCampgrounds = await Campground.find().where("author.id").equals(foundUser._id);
-            if(!foundCampgrounds)
+            if (!foundCampgrounds)
             {
                 req.flash("error", "Campground not found");
                 return res.redirect("back");
@@ -153,7 +153,7 @@ router.get("/follow/:id", middleware.isLoggedIn, async function(req, res)
     try
     {
         let foundUser = await User.findById(req.params.id);
-        if(!foundUser)
+        if (!foundUser)
         {
             req.flash("error", "User not found");
             return res.redirect("back");
@@ -184,7 +184,7 @@ router.get("/notifications", middleware.isLoggedIn, async function(req, res)
             path: "notifications",
             options: { sort: { "_id": -1 } }
         });
-        if(!foundUser)
+        if (!foundUser)
         {
             req.flash("error", "User not found");
             return res.redirect("back");
@@ -348,7 +348,7 @@ router.post("/reset/:token", function(req, res)
                     req.flash("error", "Password reset token is invalid or has expired.");
                     return res.redirect("back");
                 }
-                if(req.body.password === req.body.confirm)
+                if (req.body.password === req.body.confirm)
                 {
                     user.setPassword(req.body.password, function(err)
                     {

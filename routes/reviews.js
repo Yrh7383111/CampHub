@@ -21,7 +21,7 @@ router.get("/", async function (req, res)
     {
         // Sort the populated reviews array to show the latest first
         const foundCampground = await Campground.findById(req.params.id).populate({path: "reviews", options: {sort: {createdAt: -1}}});
-        if(!foundCampground)
+        if (!foundCampground)
         {
             req.flash("error", "Campground not found");
             return res.redirect("back");
@@ -68,7 +68,7 @@ router.post("/", middleware.isLoggedIn, middleware.checkReviewExistence, async f
     try
     {
         let foundCampground = await Campground.findById(req.params.id).populate("reviews");
-        if(!foundCampground)
+        if (!foundCampground)
         {
             req.flash("error", "Campground not found");
             return res.redirect("back");
@@ -147,7 +147,7 @@ router.put("/:review_id", middleware.checkReviewOwnership, async function (req, 
         try
         {
             let foundCampground = await Campground.findById(req.params.id).populate("reviews");
-            if(!foundCampground)
+            if (!foundCampground)
             {
                 req.flash("error", "Campground not found");
                 return res.redirect("back");

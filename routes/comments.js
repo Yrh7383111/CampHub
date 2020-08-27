@@ -21,7 +21,7 @@ router.get("/new", middleware.isLoggedIn, async function(req, res)              
     try
     {
         const foundCampground = await Campground.findById(req.params.id);
-        if(!foundCampground)
+        if (!foundCampground)
         {
             req.flash("error", "Campground not found");
             return res.redirect("back");
@@ -52,7 +52,7 @@ router.post("/", middleware.isLoggedIn, async function(req, res)                
     try
     {
         let foundCampground = await Campground.findById(req.params.id);
-        if(!foundCampground)
+        if (!foundCampground)
         {
             req.flash("error", "Campground not found");
             return res.redirect("back");
@@ -102,7 +102,7 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
     try
     {
         const foundCampground = await Campground.findById(req.params.id);
-        if(!foundCampground)
+        if (!foundCampground)
         {
             req.flash("error", "Campground not found");
             return res.redirect("back");
@@ -113,7 +113,7 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
             // "req.params.comment_id" refers to the "id" of a particular comment
             // Corresponds "router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res)"
             const foundComment = await Comment.findById(req.params.comment_id);
-            if(!foundComment)
+            if (!foundComment)
 
             {
                 req.flash("error", "Comment not found");

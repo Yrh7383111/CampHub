@@ -38,7 +38,7 @@
                             <div>Review by: <strong><%= review.author.username %></strong></div>
                             <span><em><%= review.updatedAt.toDateString() %></em></span>
                             <p>
-                                <% if(currentUser && review.author.id.equals(currentUser._id)){ %>
+                                <% if (currentUser && review.author.id.equals(currentUser._id)){ %>
                                 <div class="row">
                                     <a class="btn btn-sm btn-warning ml-3 mr-2" href="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>/edit">Edit</a>
                                     <form id="delete-form" action="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">

@@ -62,7 +62,7 @@ passport.deserializeUser(User.deserializeUser());                       // Read 
 app.use(async function(req, res, next)                                  // Middleware which runs for all Routes
 {
     res.locals.currentUser = req.user;
-    if(req.user)
+    if (req.user)
     {
         try
         {

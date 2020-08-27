@@ -75,7 +75,7 @@
                     <!--
                     Admin User Role Authorization
                     -->
-                    <% if((currentUser && currentUser.isAdmin) || (currentUser && campground.author.id.equals(currentUser._id))){ %>
+                    <% if ((currentUser && currentUser.isAdmin) || (currentUser && campground.author.id.equals(currentUser._id))){ %>
                         <a class="btn btn-xs btn-warning mr-1" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
                         <form class="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-xs btn-danger">Delete</button>
@@ -137,7 +137,7 @@
                                     </div>
                                     <span><em><%= review.updatedAt.toDateString() %></em></span>
                                     <p>
-                                        <% if(currentUser && review.author.id.equals(currentUser._id)){ %>
+                                        <% if (currentUser && review.author.id.equals(currentUser._id)){ %>
                                         <div class="row">
                                             <a class="btn btn-sm btn-warning ml-3 mr-2" href="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>/edit">Edit</a>
                                             <form id="delete-form" action="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
@@ -222,7 +222,7 @@
                     <div class="collapse" id="collapseComment">
                         <div class="card mb-3" style="border-top: 5px solid #00C851; border-bottom: 5px solid #00C851;">
                             <div class="card-body">
-                                <% if(!currentUser) { %>
+                                <% if (!currentUser) { %>
                                     <!-- If the user is not logged in, direct him to the login page -->
                                     <h5>Please login before adding a new comment. <a href="/login">Click here</a> to login.</h5>
                                 <% } else { %>

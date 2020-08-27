@@ -3,7 +3,7 @@ const Comment = require("./comment");
 const Review = require("./review");
 
 
-const campgroundSchema = new mongoose.Schema                                  // Declare a Schema for the Collection in the database
+const campgroundSchema = new mongoose.Schema                                // Declare a Schema for the Collection in the database
 ({
     name: String,
     price: String,
@@ -58,6 +58,6 @@ const campgroundSchema = new mongoose.Schema                                  //
 });
 
 
-module.exports = mongoose.model("Campground", campgroundSchema);           // Create a new Collection named "campgrounds" (pluralize) in the database,
+module.exports = mongoose.model("Campground", campgroundSchema);    // Create a new Collection named "campgrounds" (pluralize) in the database,
                                                                            // apply the Schema on to it.
                                                                            // and eventually export the "model"

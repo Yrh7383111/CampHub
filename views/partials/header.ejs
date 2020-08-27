@@ -28,7 +28,7 @@
             </ul>
 
             <ul class="navbar-nav navbar-right">
-                <% if(!currentUser){ %>
+                <% if (!currentUser){ %>
                     <!-- Fuzzy Search -->
                     <form action="/campgrounds" method="GET" class="form-inline mt-2 mt-md-0">
                         <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" aria-label="Search">
@@ -80,7 +80,7 @@
         <!--
         Ensure there is an error AND error is not null
         -->
-        <% if(error && error.length > 0){ %>
+        <% if (error && error.length > 0){ %>
             <div class="alert alert-danger" role="alert">
                 <%= error %>
             </div>
@@ -89,7 +89,7 @@
         <!--
         Ensure there is a success AND success is not null
         -->
-        <% if(success && success.length > 0){ %>
+        <% if (success && success.length > 0){ %>
             <div class="alert alert-success" role="alert">
                 <%= success %>
             </div>

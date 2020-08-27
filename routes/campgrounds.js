@@ -199,7 +199,7 @@ router.post("/", middleware.isLoggedIn, upload.single("image"), async function(r
         if (!data.length)
         {
             req.flash("error", "Invalid address");
-            return res.redirect("back");                                        // Program stops here and will not execute the code below
+            return res.redirect("back");                                // Program stops here and will not execute the code below
         }
         // Else
 
@@ -213,8 +213,8 @@ router.post("/", middleware.isLoggedIn, upload.single("image"), async function(r
         {
             const result = await cloudinary.uploader.upload(req.file.path);
 
-            req.body.image = result.secure_url;                         // Add cloudinary url for the image to the campground object under image property
-            const image = req.body.image;                                 // match name from <input type="file" name="image" id="image" accept="image/*" required>
+            req.body.image = result.secure_url;                             // Add cloudinary url for the image to the campground object under image property
+            const image = req.body.image;                                   // match name from <input type="file" name="image" id="image" accept="image/*" required>
 
             // Add image's public_id to campground object
             req.body.imageId = result.public_id;
@@ -446,7 +446,7 @@ router.put("/:id", middleware.checkCampgroundOwnership, upload.single("image"), 
         try
         {
             let foundCampground = await Campground.findById(req.params.id);
-            if(!foundCampground)
+            if (!foundCampground)
             {
                 req.flash("error", "Campground not found");
                 return res.redirect("back");
