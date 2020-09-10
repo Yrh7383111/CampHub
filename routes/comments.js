@@ -1,5 +1,6 @@
 const express = require("express");
-const router = express.Router({mergeParams: true});                               // Merge parameters from "campgrounds.js" and "comments.js"
+// Merge parameters from "campgrounds.js" and "comments.js"
+const router = express.Router({ mergeParams: true });
 const Campground = require("../models/campground");
 const Comment = require("../models/comment");
 const middleware = require("../middleware");
@@ -9,11 +10,9 @@ const middleware = require("../middleware");
 // NEW - Show the form to add a new comment to a particular campground
 // Functionality: Allow users to add new comments
 // Invoke "app.get("/campgrounds/:id/comments/new", function(req, res)"
-router.get("/new", middleware.isLoggedIn, async function(req, res)                      // Hide the functionality - add a new comment, to User who is not logged in
-                                                                                        // isLoggedIn - Middleware
-                                                                                        // If the User is logged in, then execute the next step.
-                                                                                        // Otherwise, prevent from executing the next step
-{
+// Hide the functionality - add a new comment, to User who is not logged in
+// isLoggedIn - Middleware
+router.get("/new", middleware.isLoggedIn, async function(req, res) {
     // Find campground by id
 
     // "req.params.id" refers to the "id" of a particular campground
@@ -40,11 +39,10 @@ router.get("/new", middleware.isLoggedIn, async function(req, res)              
 
 
 // CREATE - Add a new comment (req.body.comment) to the database
-// Invoke "app.post("/campgrounds/:id/comments", function(req, res)"                    // Hide the functionality - add a new comment, to User who is not logged in
-router.post("/", middleware.isLoggedIn, async function(req, res)                        // isLoggedIn - Middleware
-                                                                                        // If the User is logged in, then execute the next step.
-                                                                                        // Otherwise, prevent from executing the next step
-{
+// Invoke "app.post("/campgrounds/:id/comments", function(req, res)"
+// Hide the functionality - add a new comment, to User who is not logged in
+// isLoggedIn - Middleware
+router.post("/", middleware.isLoggedIn, async function(req, res) {
     // Lookup campground using ID
 
     // "req.params.id" refers to the "id" of a particular campground
@@ -63,8 +61,10 @@ router.post("/", middleware.isLoggedIn, async function(req, res)                
             let comment = await Comment.create(req.body.comment);
 
             // Add username and id to comment
-            comment.author.id = req.user._id;                                       // "comment.author.id" needs to match Comment Data Model
-            comment.author.username = req.user.username;                            // "comment.author.username" needs to match Comment Data Model
+            // "comment.author.id" needs to match Comment Data Model
+            comment.author.id = req.user._id;
+            // "comment.author.username" needs to match Comment Data Model
+            comment.author.username = req.user.username;
             // Save comment
             comment.save();
 
@@ -97,8 +97,7 @@ router.post("/", middleware.isLoggedIn, async function(req, res)                
 
 // Edit - Show the form to edit a existing comment
 // Invoke "app.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res)"
-router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function(req, res)
-{
+router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function(req, res) {
     try
     {
         const foundCampground = await Campground.findById(req.params.id);
@@ -114,7 +113,6 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
             // Corresponds "router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res)"
             const foundComment = await Comment.findById(req.params.comment_id);
             if (!foundComment)
-
             {
                 req.flash("error", "Comment not found");
                 return res.redirect("back");
@@ -140,8 +138,7 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
 
 // UPDATE - Update a existing comment to the database
 // Invoke "app.put("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
-router.put("/:comment_id", middleware.checkCommentOwnership, async function(req, res)
-{
+router.put("/:comment_id", middleware.checkCommentOwnership, async function(req, res) {
     // "req.params.comment_id" refers to the "id" of a particular comment
     // Corresponds "router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
     try
@@ -150,7 +147,6 @@ router.put("/:comment_id", middleware.checkCommentOwnership, async function(req,
 
         req.flash("success", "Your comment was successfully edited.");
         res.redirect("/campgrounds/" + req.params.id );
-
     }
     catch(err)
     {
@@ -163,8 +159,7 @@ router.put("/:comment_id", middleware.checkCommentOwnership, async function(req,
 
 // DELETE - Delete a existing comment
 // Invoke "app.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
-router.delete("/:comment_id", middleware.checkCommentOwnership, async function(req, res)
-{
+router.delete("/:comment_id", middleware.checkCommentOwnership, async function(req, res) {
     // "req.params.comment_id" refers to the "id" of a particular comment
     // Corresponds "router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
     try
@@ -184,4 +179,5 @@ router.delete("/:comment_id", middleware.checkCommentOwnership, async function(r
 
 
 
-module.exports = router;                    // Export "router"
+// Export "router"
+module.exports = router;

@@ -3,46 +3,63 @@ const Comment = require("./comment");
 const Review = require("./review");
 
 
-const campgroundSchema = new mongoose.Schema                                // Declare a Schema for the Collection in the database
+
+// Campground Collection schema
+const campgroundSchema = new mongoose.Schema
 ({
+    // Basic information
     name: String,
     price: String,
     image: String,
     imageId: String,
     description: String,
 
-    location: String,                                                       // For Google Map API
-    lat: Number,                                                            // For Google Map API
-    lng: Number,                                                            // For Google Map API
+    // Google Map API
+    location: String,
+    lat: Number,
+    lng: Number,
 
-    createdAt: { type: Date, default: Date.now },                           // Moment JS - Time passed since date created
+    // Moment JS - Time passed since date created
+    createdAt: { type: Date, default: Date.now },
 
+    // Author
     author: {
-        id: {                                                               // "id" is a reference to a User model "id"
-                                                                            // needs to match"req.user._id"
+        // "id" is a reference to a User Collection "id"
+        // When referring to id of author, needs to use"req.user._id"
+        id: {
             type: mongoose.Schema.Types.ObjectId,
+            // Refer to User Collection schema
+            // module.exports = mongoose.model("User", UserSchema)
             ref: "User"
         },
-        username: String                                                    // "username" is a reference to a User model "username",
-                                                                            // needs to match "req.user.username"
+        // "username" is a reference to a User model "username",
+        // needs to match "req.user.username"
+        username: String
     },
+
+    // Like feature
+    likes: [
+        {
+            // "id" is a reference to a User Collection "id"
+            // When referring to id of author, needs to use"req.user._id"
+            type: mongoose.Schema.Types.ObjectId,
+            // Refer to User Collection schema
+            // module.exports = mongoose.model("User", UserSchema)
+            ref: "User"
+        }
+    ],
+
+    // Comments feature
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"                                                  // "Comment" needs to match
-                                                                            // module.exports = mongoose.model("Comment", commentSchema);
+            // Refer to Comment Collection schema
+            // module.exports = mongoose.model("Comment", commentSchema)
+            ref: "Comment"
         }
     ],
 
-    // Allow campground model to support the "like" feature
-    likes: [                                                                //  Hold ObjectId references to the particular users who like the campground
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }
-    ],
-
-    // Allow campground model to support the "review" feature
+    // Review feature
     reviews: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -50,7 +67,7 @@ const campgroundSchema = new mongoose.Schema                                // D
         }
     ],
 
-    // Allow campground model to support the "rate" feature
+    // Rating feature
     rating: {
         type: Number,
         default: 0
@@ -58,6 +75,7 @@ const campgroundSchema = new mongoose.Schema                                // D
 });
 
 
-module.exports = mongoose.model("Campground", campgroundSchema);    // Create a new Collection named "campgrounds" (pluralize) in the database,
-                                                                           // apply the Schema on to it.
-                                                                           // and eventually export the "model"
+// Create a new Collection named "campgrounds" (pluralize) in the database,
+// apply the Schema on to it.
+// and eventually export the "model"
+module.exports = mongoose.model("Campground", campgroundSchema);

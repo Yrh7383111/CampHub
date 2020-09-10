@@ -3,13 +3,6 @@ CampHub is an interactive graphic website which allows users to read, post, edit
 
 
 ## Project Setup
-
-### Install dependencies
-```
-npm install
-```
-
-### Start project
 ```
 nodemon app.js
 ```

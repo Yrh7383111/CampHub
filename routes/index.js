@@ -19,15 +19,10 @@ router.get("/", function(req, res)
 });
 
 
-
-//  ===========
-// AUTHENTICATION ROUTES
-//  ===========
-
+// Authentication
 // NEW - Show the form to register a User
 // Invoke "app.get("/register", function(req, res)"
-router.get("/register", function(req, res)
-{
+router.get("/register", function(req, res) {
     // Direct to "register.ejs"
     res.render("register", {page: "register"});
 });
@@ -35,10 +30,8 @@ router.get("/register", function(req, res)
 
 // CREATE - Add a new User to the database
 // Invoke "app.post("/register", function(req, res)"
-router.post("/register", async function(req, res)
-{
-    let newUser = new User
-    ({
+router.post("/register", async function(req, res) {
+    let newUser = new User({
         username: req.body.username,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -54,17 +47,17 @@ router.post("/register", async function(req, res)
 
     try
     {
-        const user = await User.register(newUser, req.body.password);                   // Hash "req.body.password",
-                                                                                        // and then save it into the database
+        // Hash "req.body.password"
+        // and then save it into the database
+        const user = await User.register(newUser, req.body.password);
+
         // Authentication
-        passport.authenticate("local")(req, res, function()
-        {
+        passport.authenticate("local")(req, res, function() {
             req.flash("success", "Welcome to YelpCamp " + user.username);
             // Invoke "app.get("/secret", function(req, res)"
             // and then direct to "secret.ejs"
             res.redirect("/campgrounds");
         });
-
     }
     catch(err)
     {
@@ -77,31 +70,34 @@ router.post("/register", async function(req, res)
 
 // NEW - Show the form to login
 // Invoke "app.get("/login", function(req, res)"
-router.get("/login", function(req, res)
-{
+router.get("/login", function(req, res) {
     // Direct to "login.ejs"
     res.render("login", {page: "login"});
 });
 
 
 // Login logic
-router.post("/login", passport.authenticate("local",                // "passport.authenticate()" - Middleware
+// "passport.authenticate()" - Middleware
+router.post("/login", passport.authenticate("local",
     // Functionality:
     // compare the user input from "login.ejs",
     // and then compare with the data in the databased
     {
-        successRedirect: "/campgrounds",                                         // Direct to "secret.ejs"
-        failureRedirect: "/login"                                                // Direct to "login.ejs"
+        // Direct to "secret.ejs"
+        successRedirect: "/campgrounds",
+        // Direct to "login.ejs"
+        failureRedirect: "/login"
     }), function(req, res){});
 
 
 // Logout logic
 // Invoke "app.get("/logout", function(req, res)"
-router.get("/logout", function(req, res)
-{
-    req.logout();                                                                           // "req.logout()" - function from "passport" package
-    req.flash("success", "Your account was successfully logged out.");          // req.flash(Key, Value)
-                                                                                           // Add some one-time use data before redirecting to the route
+router.get("/logout", function(req, res) {
+    // "req.logout()" - function from "passport" package
+    req.logout();
+    // req.flash(Key, Value)
+    // Add some one-time use data before redirecting to the route
+    req.flash("success", "Your account was successfully logged out.");
     // Invoke "app.get("/campgrounds", function(req, res)"
     // and then direct to "index.ejs" in "campgrounds" directory
     res.redirect("/campgrounds");
@@ -109,8 +105,7 @@ router.get("/logout", function(req, res)
 
 
 // SHOW - Show more information about one user
-router.get("/users/:id", async function(req, res)
-{
+router.get("/users/:id", async function(req, res) {
     try
     {
         const foundUser = await User.findById(req.params.id).populate("followers");
@@ -148,8 +143,7 @@ router.get("/users/:id", async function(req, res)
 
 
 // Follow user
-router.get("/follow/:id", middleware.isLoggedIn, async function(req, res)
-{
+router.get("/follow/:id", middleware.isLoggedIn, async function(req, res) {
     try
     {
         let foundUser = await User.findById(req.params.id);
@@ -175,12 +169,10 @@ router.get("/follow/:id", middleware.isLoggedIn, async function(req, res)
 
 
 // View all notifications
-router.get("/notifications", middleware.isLoggedIn, async function(req, res)
-{
+router.get("/notifications", middleware.isLoggedIn, async function(req, res) {
     try
     {
-        const foundUser = await User.findById(req.user._id).populate
-        ({
+        const foundUser = await User.findById(req.user._id).populate({
             path: "notifications",
             options: { sort: { "_id": -1 } }
         });
@@ -203,8 +195,7 @@ router.get("/notifications", middleware.isLoggedIn, async function(req, res)
 
 
 // Handle notifications
-router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res)
-{
+router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res) {
     try
     {
         let foundNotification = await Notification.findById(req.params.id);
@@ -228,21 +219,18 @@ router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res)
 
 
 // NEW - Show the form to input user email to request for password reset
-router.get("/forgot", function(req, res)
-{
+router.get("/forgot", function(req, res) {
     res.render("forgot");
 });
 
 
 // Send the email to the user with generated token to
-router.post("/forgot", function(req, res, next)
-{
+router.post("/forgot", function(req, res, next) {
     // An array of list of functions which will be executed one by one
     async.waterfall
     ([
         // Generate hex code for the token
-        function(done)
-        {
+        function(done) {
             crypto.randomBytes(20, function(err, buf)
             {
                 const token = buf.toString("hex");
@@ -271,8 +259,7 @@ router.post("/forgot", function(req, res, next)
         },
 
         // SMTP configurations
-        function(token, user, done)
-        {
+        function(token, user, done) {
             const smtpTransport = nodemailer.createTransport({
                 service: "Gmail",
                 auth: {
@@ -319,7 +306,8 @@ router.get("/reset/:token", async function(req, res)
         if (!foundUser)
         {
             req.flash("error", "Password reset token is invalid or has expired.");
-            return res.redirect("/forgot");                                                     // Be careful with "return"
+            // Be careful with "return"
+            return res.redirect("/forgot");
         }
         // Else
         res.render("reset", {token: req.params.token});
@@ -334,15 +322,11 @@ router.get("/reset/:token", async function(req, res)
 
 
 // Update the password with a valid token
-router.post("/reset/:token", function(req, res)
-{
+router.post("/reset/:token", function(req, res) {
     // An array of list of functions which will be executed one by one
-    async.waterfall
-    ([
-        function(done)
-        {
-            User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user)
-            {
+    async.waterfall([
+        function(done) {
+            User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
                 if (!user)
                 {
                     req.flash("error", "Password reset token is invalid or has expired.");
@@ -355,8 +339,7 @@ router.post("/reset/:token", function(req, res)
                         user.resetPasswordToken = undefined;
                         user.resetPasswordExpires = undefined;
 
-                        user.save(function(err)
-                        {
+                        user.save(function(err) {
                             req.logIn(user, function(err)
                             {
                                 done(err, user);
@@ -371,8 +354,7 @@ router.post("/reset/:token", function(req, res)
             });
         },
 
-        function(user, done)
-        {
+        function(user, done) {
             let smtpTransport = nodemailer.createTransport({
                     service: "Gmail",
                     auth: {
@@ -407,4 +389,5 @@ router.post("/reset/:token", function(req, res)
 
 
 
-module.exports = router;                        // Export "router"   
+// Export "router"
+module.exports = router;

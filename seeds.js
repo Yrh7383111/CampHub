@@ -3,6 +3,7 @@ let Campground = require("./models/campground");
 let Comment = require("./models/comment");
 
 
+
 let seeds = [
     {
         name: "Cloud's Rest",
@@ -22,8 +23,7 @@ let seeds = [
 ];
 
 
-async function seedDB()
-{
+async function seedDB() {
     try
     {
         await Campground.remove({});
@@ -52,7 +52,6 @@ async function seedDB()
         console.log(err);
     }
 }
-
 
 
 module.exports = seedDB;                        // Export the "seedDB" function

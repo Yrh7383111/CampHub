@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 
+
+
+// Review Collections schema
 const reviewSchema = new mongoose.Schema
 ({
+    // Rating
     rating: {
-        // Set the field type
         type: Number,
-        // Making the star rating required
+        // Rating is required
         required: "Please provide a rating (1-5 stars).",
         // Define min and max values
         min: 1,
@@ -14,27 +17,33 @@ const reviewSchema = new mongoose.Schema
         validate: {
             // Validator accepts a function definition which it uses for validation
             validator: Number.isInteger,
-            message: "{VALUE} is not an integer value."
+            message: "{ VALUE } is not an integer value."
         }
     },
 
     // Review text
-    text: {
-        type: String
-    },
+    text: { type: String },
 
-    // Author id and username associated with the review
+    // Author
     author: {
+        // "id" is a reference to a User Collection "id"
+        // When referring to id of author, needs to use"req.user._id"
         id: {
             type: mongoose.Schema.Types.ObjectId,
+            // Refer to User Collection schema
+            // module.exports = mongoose.model("User", UserSchema)
             ref: "User"
         },
+        // "username" is a reference to a User model "username",
+        // needs to match "req.user.username"
         username: String
     },
 
     // Campground associated with the review
     campground: {
         type: mongoose.Schema.Types.ObjectId,
+        // Refer to Campground Collection schema
+        // module.exports = mongoose.model("Campground", campgroundSchema)
         ref: "Campground"
     }
 }, {
@@ -44,4 +53,7 @@ const reviewSchema = new mongoose.Schema
 });
 
 
+// Create a new Collection named "reviews" (pluralize) in the database,
+// apply the Schema on to it.
+// and eventually export the "model"
 module.exports = mongoose.model("Review", reviewSchema);

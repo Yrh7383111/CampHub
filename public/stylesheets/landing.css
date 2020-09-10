@@ -1,7 +1,7 @@
-body
-{
+body {
   background-color: #000;
 }
+
 
 /*
 - We set the z-index to 1 so all of the elements inside the landing-header div will be in front of the background images
@@ -10,21 +10,17 @@ body
 - We use padding-top to vertically center our div, since it's contents take up quite a bit of space we use 40vh (view height) instead of 50,
   this way the content looks more visually centered
 */
-#landing-header
-{
+#landing-header {
   z-index: 1;
   position: relative;
   text-align: center;
   padding-top: 40vh;
 }
-
-/*
-- We also need to change the h1 text color to white
-*/
-#landing-header h1
-{
+/* We also need to change the h1 text color to white */
+#landing-header h1 {
   color: #fff;
 }
+
 
 /*
 - Fix the ul to the window, positioning it in the top left corner and filling the entire screen by setting width and height to 100%
@@ -32,8 +28,7 @@ body
 - List-style is set to none in order to hide the bullet points from the list's default styling
 - Margin and padding are removed entirely
 */
-.slideshow
-{
+.slideshow {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -51,8 +46,7 @@ body
   keeps linear timing (the whole animation runs at the same speed),
   and loops an infinite number of times
  */
-.slideshow li
-{
+.slideshow li {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -69,49 +63,40 @@ body
 /*
 - Each list item needs a background-image and the last four need an animation-delay (this way they all fire off one after the other in ten second intervals)
  */
-.slideshow li:nth-child(1)
-{
+.slideshow li:nth-child(1) {
   background-image: url(http://i.imgur.com/emvhOnb.jpg);
 }
-.slideshow li:nth-child(2)
-{
+.slideshow li:nth-child(2) {
   background-image: url(http://i.imgur.com/2LSMCmJ.jpg);
   animation-delay: 10s; 
 }
-.slideshow li:nth-child(3)
-{
+.slideshow li:nth-child(3) {
   background-image: url(https://images.unsplash.com/photo-1465800872432-a98681fc5828?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2096&q=80);
   animation-delay: 20s; 
 }
-.slideshow li:nth-child(4)
-{
+.slideshow li:nth-child(4) {
   background-image: url(https://images.unsplash.com/photo-1544962995-22362bbe1853?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2600&q=80);
   animation-delay: 30s; 
 }
-.slideshow li:nth-child(5)
-{
+.slideshow li:nth-child(5) {
   background-image: url(https://images.unsplash.com/photo-1500581276021-a4bbcd0050c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80);
   animation-delay: 40s; 
 }
 
-@keyframes imageAnimation
-{
-  0%
-  {
+
+@keyframes imageAnimation {
+  0% {
     opacity: 0; 
     animation-timing-function: ease-in;
   }
-  10%
-  {
+  10% {
     opacity: 1;
     animation-timing-function: ease-out;
   }
-  20%
-  {
+  20% {
     opacity: 1
   }
-  30%
-  {
+  30% {
     opacity: 0
   }
 }

@@ -1,16 +1,17 @@
+// MongoDB schema
 const Campground = require("../models/campground");
 const Comment = require("../models/comment");
 const Review = require("../models/review");
+
 
 
 // All the Middleware will be stored here
 let middlewareObj = {};
 
 
-
-middlewareObj.checkCampgroundOwnership = async function(req, res, next)
-{
-    // User Authentication - To check if a user is logged in or not
+// Campground ownership check
+middlewareObj.checkCampgroundOwnership = async function(req, res, next) {
+    // req.isAuthenticated() - function from "passport" package
     if (req.isAuthenticated())
     {
         try
@@ -22,16 +23,16 @@ middlewareObj.checkCampgroundOwnership = async function(req, res, next)
                 return res.redirect("back");
             }
             // Else
-            // Authorization - To check if a user is given permission to do certain operations
-            if ((foundCampground.author.id.equals(req.user._id)) || (req.user.isAdmin))         // "foundCampground.author.id" - Mongo object
-                                                                                                // "req.user._id" - String
-                                                                                                // Admin User Role Authorization
+            // Authorization -
+            // 1. The user is the creator of the campground
+            // 2. The user is an admin
+            if ((foundCampground.author.id.equals(req.user._id)) || (req.user.isAdmin))
             {
-                next();                                                                         // If yes, then proceed to the next step,
+                next();
             }
             else {
                 req.flash("error", "Sorry, you don't have the permission...");
-                res.redirect("back");                                                           // otherwise, go back to the previous page
+                res.redirect("back");
             }
 
         }
@@ -48,30 +49,29 @@ middlewareObj.checkCampgroundOwnership = async function(req, res, next)
     }
 };
 
-
-middlewareObj.checkCommentOwnership = async function(req, res, next)
-{
-    // User Authentication - To check if a user is logged in or not
+// Comment ownership check
+middlewareObj.checkCommentOwnership = async function(req, res, next) {
     if (req.isAuthenticated())
     {
         try
         {
-            const foundComment = await  Comment.findById(req.params.comment_id);
+            const foundComment = await Comment.findById(req.params.comment_id);
             if (!foundComment)
             {
                 req.flash("error", "Comment not found");
                 return res.redirect("back");
             }
             // Else
-
-            // Authorization - To check if a user is given permission to do certain operations
-            if ((foundComment.author.id.equals(req.user._id)) || (req.user.isAdmin))                // Admin User Role Authorization
+            // Authorization -
+            // 1. The user is the creator of the comment
+            // 2. The user is an admin
+            if ((foundComment.author.id.equals(req.user._id)) || (req.user.isAdmin))
             {
-                next();                                                                             // If yes, then proceed to the next step,
+                next();
             }
             else {
                 req.flash("error", "Sorry, you don't have the permission...");
-                res.redirect("back");                                                               // otherwise, go back to the previous page
+                res.redirect("back");
             }
         }
         catch(err)
@@ -88,9 +88,8 @@ middlewareObj.checkCommentOwnership = async function(req, res, next)
     }
 };
 
-
-middlewareObj.checkReviewOwnership = async function(req, res, next)
-{
+// Review ownership check
+middlewareObj.checkReviewOwnership = async function(req, res, next) {
     if (req.isAuthenticated())
     {
         try
@@ -102,8 +101,9 @@ middlewareObj.checkReviewOwnership = async function(req, res, next)
                 return res.redirect("back");
             }
             // Else
-
-            // Authorization - To check if a user is given permission to do certain operations
+            // Authorization -
+            // 1. The user is the creator of the review
+            // 2. The user is an admin
             if (foundReview.author.id.equals(req.user._id))
             {
                 next();
@@ -128,9 +128,8 @@ middlewareObj.checkReviewOwnership = async function(req, res, next)
     }
 };
 
-
-middlewareObj.checkReviewExistence = async function (req, res, next)
-{
+// Review existence check
+middlewareObj.checkReviewExistence = async function (req, res, next) {
     if (req.isAuthenticated())
     {
         try
@@ -142,9 +141,9 @@ middlewareObj.checkReviewExistence = async function (req, res, next)
                 return res.redirect("back");
             }
             // Else
-
             // Check if req.user._id exists in foundCampground.reviews
-            let foundUserReview = foundCampground.reviews.some(function (review)        // some() - return true a review with the currently logged in user was found
+            // some() - return true if a review with the currently logged in user is found
+            let foundUserReview = foundCampground.reviews.some(function (review)
             {
                 return review.author.id.equals(req.user._id);
             });
@@ -173,20 +172,16 @@ middlewareObj.checkReviewExistence = async function (req, res, next)
 };
 
 
-// Middleware function declaration - To check if the User if logged in or not
-middlewareObj.isLoggedIn = function(req, res, next)                                         // Three parameters
-{
-    // If the User is logged in, then execute the next step.
-    // Otherwise, prevent from executing the next step
-    if (req.isAuthenticated())                                                              // req.isAuthenticated() - function from "passport" package
+// User login check
+middlewareObj.isLoggedIn = function(req, res, next) {
+    if (req.isAuthenticated())
     {
         return next();
     }
     else {
-        req.flash("error", "You need to be logged in!");                        // req.flash(Key, Value)
-                                                                                            // Add some one-time use data before redirecting to the route
-        // Invoke "app.get(app.get("/campgrounds/:id, function(req, res)"
-        // and then direct to "show.ejs" in "campgrounds" directory
+        req.flash("error", "You need to be logged in!");
+        // Add some one-time use data before redirecting to the route
+        // Invoke "/login" URL
         res.redirect("/login");
     }
 };
