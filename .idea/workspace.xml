@@ -2,20 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4cd4bc5c-9f2e-4f28-a983-6d901c9fe989" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/campground.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/campground.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/campgrounds.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/campgrounds.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/comments.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/comments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/reviews.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/reviews.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/campgrounds/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/campgrounds/index.ejs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/campgrounds/show.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/campgrounds/show.ejs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/landing.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/landing.ejs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/partials/header.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/partials/header.ejs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/reviews/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/reviews/index.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +11,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/app.js" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1fjwUZfBNt4lZzDDyHH3NWHK3Nd" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
