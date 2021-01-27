@@ -101,15 +101,15 @@ router.get("/", async function(req, res) {
             catch(err)
             {
                 console.log(err.message);
-                req.flash("error", "Something went wrong");
-                return res.redirect("back");
+                req.flash("error", "Something went wrong in campgrounds GET");
+                res.redirect("back");
             }
 
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
+            req.flash("error", "Something went wrong in campgrounds GET");
             return res.redirect("back");
         }
     }
@@ -140,14 +140,14 @@ router.get("/", async function(req, res) {
             catch(err)
             {
                 console.log(err.message);
-                req.flash("error", "Something went wrong");
-                return res.redirect("back");
+                req.flash("error", "Something went wrong in campgrounds GET");
+                res.redirect("back");
             }
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
+            req.flash("error", "Something went wrong in campgrounds GET");
             return res.redirect("back");
         }
     }
@@ -155,7 +155,6 @@ router.get("/", async function(req, res) {
 
 
 // NEW - Show the form to create a new campground
-// Functionality: Allow users to add new backgrounds
 // Invoke "app.get("/campgrounds/new", function(req, res)"
 // Hide the functionality - add a new campground, to User who is not logged in
 // isLoggedIn - Middleware
@@ -202,14 +201,13 @@ router.post("/", middleware.isLoggedIn, upload.single("image"), async function(r
 
             // Add cloudinary url for the image to the campground object under image property
             req.body.image = result.secure_url;
-            // match name from <input type="file" name="image" id="image" accept="image/*" required>
             const image = req.body.image;
 
             // Add image's public_id to campground object
             req.body.imageId = result.public_id;
             const imageId = req.body.imageId;
 
-            const newCampground = {name, price, image, imageId, description, author, location, lat, lng};
+            const newCampground = { name, price, image, imageId, description, author, location, lat, lng };
             try
             {
                 const newlyCreated = await Campground.create(newCampground);
@@ -236,68 +234,59 @@ router.post("/", middleware.isLoggedIn, upload.single("image"), async function(r
                             await follower.save();
 
                             req.flash("success", "Your campground was successfully added");
-                            // Invoke "app.get("/campgrounds", function(req, res)"
-                            // and then direct to "index.ejs" in "campgrounds" directory
                             res.redirect("/campgrounds/" + newlyCreated.id);
                         }
                         catch(err)
                         {
                             console.log(err.message);
-                            req.flash("error", "Something went wrong");
-                            return res.redirect("back");
+                            req.flash("error", "Something went wrong in campgrounds POST");
+                            res.redirect("back");
                         }
                     }
                 }
                 catch(err)
                 {
                     console.log(err.message);
-                    req.flash("error", "Something went wrong");
-                    return res.redirect("back");
+                    req.flash("error", "Something went wrong in campgrounds POST");
+                    res.redirect("back");
                 }
             }
             catch(err)
             {
                 console.log(err.message);
-                req.flash("error", "Something went wrong");
-                return res.redirect("back");
+                req.flash("error", "Something went wrong in campgrounds POST");
+                res.redirect("back");
             }
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in campgrounds POST");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in campgrounds POST");
+        res.redirect("back");
     }
 });
 
 
 // SHOW - Show more information about one campground
 // Invoke "app.get(app.get("/campgrounds/:id, function(req, res)"
-// ":id" (anonymous name)
 router.get("/:id", async function(req, res) {
-    // Find the campground with provided Id
-
-    // "req.params.id" refers to the "id" of a particular campground
-    // Corresponds to "app.use("/campgrounds", campgroundRoutes)" (code) in "app.js" (file)
-
-    // populate("comments likes") - Allow us to access details of the users who liked the campground
     try
     {
         const foundCampground = await Campground.findById(req.params.id)
             .populate("likes")
             .populate({
             path: "reviews",
-            options: {sort: {createdAt: -1}}})
+            options: { sort: { createdAt: -1 } }})
             .populate({
             path: "comments",
-            options: {sort: {createdAt: -1}}
+            options: { sort: { createdAt: -1 } }
         });
         if (!foundCampground)
         {
@@ -305,14 +294,13 @@ router.get("/:id", async function(req, res) {
             return res.redirect("back");
         }
         // Else
-        // Direct to "show.ejs" in "campgrounds" directory
-        res.render("campgrounds/show", {campground:foundCampground});
+        res.render("campgrounds/show", { campground:foundCampground });
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in campground GET");
+        res.redirect("back");
     }
 });
 
@@ -329,11 +317,6 @@ router.post("/:id/like", middleware.isLoggedIn, async function (req, res) {
             return res.redirect("back");
         }
         // Else
-        // The some() method will iterate over the foundCampground.likes array,
-        // calling equals() on each element (ObjectId) to see if it matches req.user._id and stop as soon as it finds a match.
-
-        // If it finds a match it returns true, otherwise it returns false.
-        // And we store the boolean value to the foundUserLike variable.
         let foundUserLike = foundCampground.likes.some(function (like) {
             return like.equals(req.user._id);
         });
@@ -355,15 +338,15 @@ router.post("/:id/like", middleware.isLoggedIn, async function (req, res) {
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in like POST");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in like POST");
+        res.redirect("back");
     }
 });
 
@@ -385,13 +368,12 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, async function(req,
             return res.redirect("back");
         }
         // Else
-        // Direct to "edit.ejs" in "campgrounds" directory
-        res.render("campgrounds/edit", {campground: foundCampground});
+        res.render("campgrounds/edit", { campground: foundCampground });
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
+        req.flash("error", "Something went wrong in campgrounds GET edit");
         return res.redirect("back");
     }
 });
@@ -417,15 +399,6 @@ router.put("/:id", middleware.checkCampgroundOwnership, upload.single("image"), 
         req.body.campground.lat = data[0].latitude;
         req.body.campground.lng = data[0].longitude;
 
-        // Find the correct campground
-
-        // "req.params.id" - What we are trying to find
-        // "req.body.campground" - What data needs to be updated
-        //                       - An object which contains name, image and description properties
-
-        // "req.params.id" refers to the "id" of a particular campground
-        // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
-        // "req.params" - Object
         try
         {
             let foundCampground = await Campground.findById(req.params.id);
@@ -439,7 +412,6 @@ router.put("/:id", middleware.checkCampgroundOwnership, upload.single("image"), 
             {
                 try
                 {
-                    // Delete the previous image in cloudinary
                     await cloudinary.uploader.destroy(foundCampground.imageId);
                     // Upload the new image in cloudinary
                     let result = await cloudinary.uploader.upload(req.file.path);
@@ -451,7 +423,7 @@ router.put("/:id", middleware.checkCampgroundOwnership, upload.single("image"), 
                 catch(err)
                 {
                     console.log(err.message);
-                    req.flash("error", "Something went wrong");
+                    req.flash("error", "Something went wrong in campgrounds PUT");
                     return res.redirect("back");
                 }
             }
@@ -474,22 +446,22 @@ router.put("/:id", middleware.checkCampgroundOwnership, upload.single("image"), 
             catch(err)
             {
                 console.log(err.message);
-                req.flash("error", "Something went wrong");
-                return res.redirect("back");
+                req.flash("error", "Something went wrong in campgrounds PUT");
+                res.redirect("back");
             }
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in campgrounds PUT");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in campgrounds PUT");
+        res.redirect("back");
     }
 });
 
@@ -528,29 +500,29 @@ router.delete("/:id", middleware.checkCampgroundOwnership, async function(req, r
                 catch(err)
                 {
                     console.log(err.message);
-                    req.flash("error", "Something went wrong");
-                    return res.redirect("back");
+                    req.flash("error", "Something went wrong in campgrounds DELETE");
+                    res.redirect("back");
                 }
             }
             catch(err)
             {
                 console.log(err.message);
-                req.flash("error", "Something went wrong");
-                return res.redirect("back");
+                req.flash("error", "Something went wrong in campgrounds DELETE");
+                res.redirect("back");
             }
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in campgrounds DELETE");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in campgrounds DELETE");
+        res.redirect("back");
     }
 });
 
