@@ -14,8 +14,6 @@ const middleware = require("../middleware");
 router.get("/new", middleware.isLoggedIn, async function(req, res) {
     try
     {
-        // "req.params.id" refers to the "id" of a particular campground
-        // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
         const foundCampground = await Campground.findById(req.params.id);
         if (!foundCampground)
         {
@@ -40,8 +38,6 @@ router.get("/new", middleware.isLoggedIn, async function(req, res) {
 router.post("/", middleware.isLoggedIn, async function(req, res) {
     try
     {
-        // "req.params.id" refers to the "id" of a particular campground
-        // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
         let foundCampground = await Campground.findById(req.params.id);
         if (!foundCampground)
         {
@@ -53,14 +49,12 @@ router.post("/", middleware.isLoggedIn, async function(req, res) {
         {
             let comment = await Comment.create(req.body.comment);
 
-            // Attach username and id to comment
             // "comment.author.id" needs to match Comment Data Model
             comment.author.id = req.user._id;
             // "comment.author.username" needs to match Comment Data Model
             comment.author.username = req.user.username;
             comment.save();
 
-            // Add comment to comments array
             foundCampground.comments.push(comment);
             foundCampground.save();
 
@@ -84,12 +78,10 @@ router.post("/", middleware.isLoggedIn, async function(req, res) {
 
 
 // Edit - Show the form to edit a existing comment
-// Invoke "app.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res)"
+// Invoke "app.get("/campgrounds/:id/comments/:comment_id/edit", middleware.checkCommentOwnership, function(req, res)"
 router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function(req, res) {
     try
     {
-        // "req.params.id" refers to the "id" of a particular campground
-        // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
         const foundCampground = await Campground.findById(req.params.id);
         if (!foundCampground)
         {
@@ -99,8 +91,6 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
         // Else
         try
         {
-            // "req.params.comment_id" refers to the "id" of a particular comment
-            // Corresponds "router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res)"
             const foundComment = await Comment.findById(req.params.comment_id);
             if (!foundComment)
             {
@@ -127,12 +117,10 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
 
 
 // UPDATE - Update a existing comment to the database
-// Invoke "app.put("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
+// Invoke "app.put("/campgrounds/:id/comments/:comment_id", middleware.checkCommentOwnership, function(req, res)"
 router.put("/:comment_id", middleware.checkCommentOwnership, async function(req, res) {
     try
     {
-        // "req.params.comment_id" refers to the "id" of a particular comment
-        // Corresponds "router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
         await Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment);
 
         req.flash("success", "Your comment was successfully edited.");
@@ -148,10 +136,8 @@ router.put("/:comment_id", middleware.checkCommentOwnership, async function(req,
 
 
 // DELETE - Delete a existing comment
-// Invoke "app.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
+// Invoke "app.delete("/campgrounds/:id/comments/:comment_id", middleware.checkCommentOwnership, function(req, res)"
 router.delete("/:comment_id", middleware.checkCommentOwnership, async function(req, res) {
-    // "req.params.comment_id" refers to the "id" of a particular comment
-    // Corresponds "router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
     try
     {
         await Comment.findByIdAndRemove(req.params.comment_id);

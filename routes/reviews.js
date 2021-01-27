@@ -13,13 +13,12 @@ const middleware = require("../middleware");
 
 
 // INDEX - Show all reviews in the database
+// Invoke "app.get("/campgrounds/:id/reviews", function(req, res)"
 router.get("/", async function (req, res) {
-    // First find the campground,
-    // and then populate the ObjectId references in the reviews field (defined in the campground model),
     try
     {
         // Sort the populated reviews array to show the latest first
-        const foundCampground = await Campground.findById(req.params.id).populate({path: "reviews", options: {sort: {createdAt: -1}}});
+        const foundCampground = await Campground.findById(req.params.id).populate({ path: "reviews", options: { sort: { createdAt: -1 } } });
         if (!foundCampground)
         {
             req.flash("error", "Campground not found");
@@ -31,13 +30,14 @@ router.get("/", async function (req, res) {
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in reviews GET");
+        res.redirect("back");
     }
 });
 
 
 // NEW - Show the form to add a new review to a particular campground
+// Invoke "app.get("/campgrounds/:id/reviews/new", function(req, res)"
 // middleware.checkReviewExistence - one single review per user
 router.get("/new", middleware.isLoggedIn, middleware.checkReviewExistence, async function (req, res) {
     try
@@ -54,13 +54,14 @@ router.get("/new", middleware.isLoggedIn, middleware.checkReviewExistence, async
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in reviews GET new");
+        res.redirect("back");
     }
 });
 
 
 // CREATE - Add a new review to the database
+// Invoke "app.post("/campgrounds/:id/reviews", function(req, res)"
 router.post("/", middleware.isLoggedIn, middleware.checkReviewExistence, async function (req, res) {
     try
     {
@@ -74,18 +75,15 @@ router.post("/", middleware.isLoggedIn, middleware.checkReviewExistence, async f
         try
         {
             let review =  await Review.create(req.body.review);
-            // Add author username/id and associated campground to the review
+
             review.author.id = req.user._id;
             review.author.username = req.user.username;
             review.campground = foundCampground;
-            // Save review
             review.save();
 
-            // "campground.reviews" is an array
             foundCampground.reviews.push(review);
             // Calculate the new average review for the campground
             foundCampground.rating = calculateAverage(foundCampground.reviews);
-            // Save campground
             foundCampground.save();
 
             req.flash("success", "Your review was successfully added.");
@@ -94,20 +92,21 @@ router.post("/", middleware.isLoggedIn, middleware.checkReviewExistence, async f
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
+            req.flash("error", "Something went wrong in reviews POST");
             return res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in reviews POST");
+        res.redirect("back");
     }
 });
 
 
 // Edit - Show the form to edit a existing review
+// Invoke "app.get("/campgrounds/:id/reviews/:review_id/edit", function(req, res)"
 router.get("/:review_id/edit", middleware.checkReviewOwnership, async function (req, res) {
     try
     {
@@ -123,17 +122,18 @@ router.get("/:review_id/edit", middleware.checkReviewOwnership, async function (
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in reviews GET edit");
+        res.redirect("back");
     }
 });
 
 
 // UPDATE - Update a existing review to the database
+// Invoke "app.put("/campgrounds/:id/reviews/:review_id", function(req, res)"
 router.put("/:review_id", middleware.checkReviewOwnership, async function (req, res) {
     try
     {
-        let updatedReview = await Review.findByIdAndUpdate(req.params.review_id, req.body.review, {new: true});
+        await Review.findByIdAndUpdate(req.params.review_id, req.body.review, { new: true });
 
         try
         {
@@ -146,7 +146,6 @@ router.put("/:review_id", middleware.checkReviewOwnership, async function (req, 
             // Else
             // Recalculate campground average
             foundCampground.rating = calculateAverage(foundCampground.reviews);
-            // Save changes
             foundCampground.save();
 
             req.flash("success", "Your review was successfully edited.");
@@ -156,33 +155,32 @@ router.put("/:review_id", middleware.checkReviewOwnership, async function (req, 
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in reviews PUT");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in reviews PUT");
+        res.redirect("back");
     }
 });
 
 
 // Delete - Delete a review
+// Invoke "app.delete("/campgrounds/:id/reviews/:review_id", function(req, res)"
 router.delete("/:review_id", middleware.checkReviewOwnership, async function (req, res) {
     try
     {
         await Review.findByIdAndRemove(req.params.review_id);
+
         try
         {
             // $pull - remove the deleted ObjectId review reference from the campground's reviews array
-            let updatedCampground = await Campground.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.review_id}}, {new: true}).populate("reviews");
-
+            let updatedCampground = await Campground.findByIdAndUpdate(req.params.id, { $pull: { reviews: req.params.review_id } }, { new: true }).populate("reviews");
             // Recalculate campground average
             updatedCampground.rating = calculateAverage(updatedCampground.reviews);
-
-            // Save changes
             updatedCampground.save();
 
             req.flash("success", "Your review was successfully deleted.");
@@ -191,15 +189,15 @@ router.delete("/:review_id", middleware.checkReviewOwnership, async function (re
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in reviews DELETE");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in reviews DELETE");
+        res.redirect("back");
     }
 });
 
