@@ -14,7 +14,6 @@ const crypto = require("crypto");
 // Invoke "app.get("/", function(req, res)"
 router.get("/", function(req, res)
 {
-    // Direct to "landing.ejs"
     res.render("landing");
 });
 
@@ -23,7 +22,6 @@ router.get("/", function(req, res)
 // NEW - Show the form to register a User
 // Invoke "app.get("/register", function(req, res)"
 router.get("/register", function(req, res) {
-    // Direct to "register.ejs"
     res.render("register", {page: "register"});
 });
 
@@ -53,9 +51,7 @@ router.post("/register", async function(req, res) {
 
         // Authentication
         passport.authenticate("local")(req, res, function() {
-            req.flash("success", "Welcome to YelpCamp " + user.username);
-            // Invoke "app.get("/secret", function(req, res)"
-            // and then direct to "secret.ejs"
+            req.flash("success", "Welcome to CapmHub " + user.username);
             res.redirect("/campgrounds");
         });
     }
@@ -63,7 +59,7 @@ router.post("/register", async function(req, res) {
     {
         console.log(err.message);
         req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        res.redirect("back");
     }
 });
 
@@ -71,7 +67,6 @@ router.post("/register", async function(req, res) {
 // NEW - Show the form to login
 // Invoke "app.get("/login", function(req, res)"
 router.get("/login", function(req, res) {
-    // Direct to "login.ejs"
     res.render("login", {page: "login"});
 });
 
@@ -83,9 +78,7 @@ router.post("/login", passport.authenticate("local",
     // compare the user input from "login.ejs",
     // and then compare with the data in the databased
     {
-        // Direct to "secret.ejs"
         successRedirect: "/campgrounds",
-        // Direct to "login.ejs"
         failureRedirect: "/login"
     }), function(req, res){});
 
@@ -93,18 +86,15 @@ router.post("/login", passport.authenticate("local",
 // Logout logic
 // Invoke "app.get("/logout", function(req, res)"
 router.get("/logout", function(req, res) {
-    // "req.logout()" - function from "passport" package
+    // logout - function from "passport" package
     req.logout();
-    // req.flash(Key, Value)
-    // Add some one-time use data before redirecting to the route
     req.flash("success", "Your account was successfully logged out.");
-    // Invoke "app.get("/campgrounds", function(req, res)"
-    // and then direct to "index.ejs" in "campgrounds" directory
     res.redirect("/campgrounds");
 });
 
 
 // SHOW - Show more information about one user
+// Invoke "app.get("/users/:id", function(req, res)"
 router.get("/users/:id", async function(req, res) {
     try
     {
@@ -129,20 +119,21 @@ router.get("/users/:id", async function(req, res) {
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in users GET");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in users GET");
+        res.redirect("back");
     }
 });
 
 
 // Follow user
+// Invoke "app.get("/follow/:id", function(req, res)"
 router.get("/follow/:id", middleware.isLoggedIn, async function(req, res) {
     try
     {
@@ -163,12 +154,13 @@ router.get("/follow/:id", middleware.isLoggedIn, async function(req, res) {
     {
         console.log(err.message);
         req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        res.redirect("back");
     }
 });
 
 
 // View all notifications
+// Invoke "app.get("/notifications", function(req, res)"
 router.get("/notifications", middleware.isLoggedIn, async function(req, res) {
     try
     {
@@ -183,18 +175,19 @@ router.get("/notifications", middleware.isLoggedIn, async function(req, res) {
         }
         // Else
         let allNotifications = foundUser.notifications;
-        res.render("notifications/index", { allNotifications: allNotifications});
+        res.render("notifications/index", { allNotifications: allNotifications });
     }
     catch(err)
     {
         console.log(err.message);
         req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        res.redirect("back");
     }
 });
 
 
 // Handle notifications
+// Invoke "app.get("/notifications/:id", function(req, res)"
 router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res) {
     try
     {
@@ -207,28 +200,29 @@ router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res)
         // Else
         foundNotification.isRead = true;
         foundNotification.save();
-        res.redirect(`/campgrounds/${foundNotification.campgroundId}`);
+        res.redirect(`/campgrounds/${ foundNotification.campgroundId }`);
     }
     catch(err)
     {
         console.log(err.message);
         req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        res.redirect("back");
     }
 });
 
 
 // NEW - Show the form to input user email to request for password reset
+// Invoke "app.get("/forgot", function(req, res)"
 router.get("/forgot", function(req, res) {
     res.render("forgot");
 });
 
 
 // Send the email to the user with generated token to
+// Invoke "app.post("/forgot", function(req, res)"
 router.post("/forgot", function(req, res, next) {
     // An array of list of functions which will be executed one by one
-    async.waterfall
-    ([
+    async.waterfall([
         // Generate hex code for the token
         function(done) {
             crypto.randomBytes(20, function(err, buf)
@@ -239,10 +233,8 @@ router.post("/forgot", function(req, res, next) {
         },
 
         // Generate the token
-        function(token, done)
-        {
-            User.findOne({ email: req.body.email }, function(err, user)
-            {
+        function(token, done) {
+            User.findOne({ email: req.body.email }, function(err, user) {
                 if (!user)
                 {
                     req.flash("error", "No account with that email address exists.");
@@ -277,8 +269,7 @@ router.post("/forgot", function(req, res, next) {
                     "If you did not request this, please ignore this email and your password will remain unchanged.\n"
             };
             // Send the email
-            smtpTransport.sendMail(mailOptions, function(err)
-            {
+            smtpTransport.sendMail(mailOptions, function(err) {
                 console.log("Email successfully sent");
                 req.flash("success", "An e-mail has been sent to " + user.email + " with further instructions.");
                 done(err, "done");
@@ -298,6 +289,7 @@ router.post("/forgot", function(req, res, next) {
 
 
 // NEW - Show the form to reset the new password
+// Invoke "app.get("/reset/:token", function(req, res)"
 router.get("/reset/:token", async function(req, res)
 {
     try
@@ -306,7 +298,6 @@ router.get("/reset/:token", async function(req, res)
         if (!foundUser)
         {
             req.flash("error", "Password reset token is invalid or has expired.");
-            // Be careful with "return"
             return res.redirect("/forgot");
         }
         // Else
@@ -316,12 +307,13 @@ router.get("/reset/:token", async function(req, res)
     {
         console.log(err.message);
         req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        res.redirect("back");
     }
 });
 
 
 // Update the password with a valid token
+// Invoke "app.post("/reset/:token", function(req, res)"
 router.post("/reset/:token", function(req, res) {
     // An array of list of functions which will be executed one by one
     async.waterfall([
@@ -332,10 +324,13 @@ router.post("/reset/:token", function(req, res) {
                     req.flash("error", "Password reset token is invalid or has expired.");
                     return res.redirect("back");
                 }
-                if (req.body.password === req.body.confirm)
+                if (req.body.password !== req.body.confirm)
                 {
-                    user.setPassword(req.body.password, function(err)
-                    {
+                    req.flash("error", "Passwords do not match.");
+                    return res.redirect("back");
+                }
+                else {
+                    user.setPassword(req.body.password, function(err) {
                         user.resetPasswordToken = undefined;
                         user.resetPasswordExpires = undefined;
 
@@ -345,11 +340,7 @@ router.post("/reset/:token", function(req, res) {
                                 done(err, user);
                             });
                         });
-                    })
-                }
-                else {
-                    req.flash("error", "Passwords do not match.");
-                    return res.redirect("back");
+                    });
                 }
             });
         },

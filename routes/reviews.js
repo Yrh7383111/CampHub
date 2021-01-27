@@ -25,7 +25,7 @@ router.get("/", async function (req, res) {
             return res.redirect("back");
         }
         // Else
-        res.render("reviews/index", {campground: foundCampground});
+        res.render("reviews/index", { campground: foundCampground });
     }
     catch(err)
     {
@@ -214,8 +214,7 @@ function calculateAverage(reviews) {
         return 0;
     }
     else {
-        reviews.forEach(function (element)
-        {
+        reviews.forEach(function (element) {
             sum += element.rating;
         });
         return (sum / reviews.length);
