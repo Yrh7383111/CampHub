@@ -9,7 +9,7 @@ const Review = require("../models/review");
 let middlewareObj = {};
 
 
-// Campground ownership check
+// Check the campground ownership
 middlewareObj.checkCampgroundOwnership = async function(req, res, next) {
     // req.isAuthenticated() - function from "passport" package
     if (req.isAuthenticated())
@@ -34,12 +34,11 @@ middlewareObj.checkCampgroundOwnership = async function(req, res, next) {
                 req.flash("error", "Sorry, you don't have the permission...");
                 res.redirect("back");
             }
-
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
+            req.flash("error", "Something went wrong in checkCampgroundOwnership()");
             res.redirect("back");
         }
     }
@@ -49,8 +48,9 @@ middlewareObj.checkCampgroundOwnership = async function(req, res, next) {
     }
 };
 
-// Comment ownership check
+// Check comment ownership
 middlewareObj.checkCommentOwnership = async function(req, res, next) {
+    // req.isAuthenticated() - function from "passport" package
     if (req.isAuthenticated())
     {
         try
@@ -77,10 +77,9 @@ middlewareObj.checkCommentOwnership = async function(req, res, next) {
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
+            req.flash("error", "Something went wrong in checkCommentOwnership()");
             res.redirect("back");
         }
-
     }
     else {
         req.flash("error", "You need to be logged in!");
@@ -88,8 +87,9 @@ middlewareObj.checkCommentOwnership = async function(req, res, next) {
     }
 };
 
-// Review ownership check
+// Check review ownership
 middlewareObj.checkReviewOwnership = async function(req, res, next) {
+    // req.isAuthenticated() - function from "passport" package
     if (req.isAuthenticated())
     {
         try
@@ -112,15 +112,13 @@ middlewareObj.checkReviewOwnership = async function(req, res, next) {
                 req.flash("error", "Sorry, you don't have the permission...");
                 res.redirect("back");
             }
-
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in checkReviewOwnership()");
+            res.redirect("back");
         }
-
     }
     else {
         req.flash("error", "You need to be logged in!");
@@ -128,8 +126,9 @@ middlewareObj.checkReviewOwnership = async function(req, res, next) {
     }
 };
 
-// Review existence check
+// Check review existence
 middlewareObj.checkReviewExistence = async function (req, res, next) {
+    // req.isAuthenticated() - function from "passport" package
     if (req.isAuthenticated())
     {
         try
@@ -143,8 +142,7 @@ middlewareObj.checkReviewExistence = async function (req, res, next) {
             // Else
             // Check if req.user._id exists in foundCampground.reviews
             // some() - return true if a review with the currently logged in user is found
-            let foundUserReview = foundCampground.reviews.some(function (review)
-            {
+            let foundUserReview = foundCampground.reviews.some(function (review) {
                 return review.author.id.equals(req.user._id);
             });
             if (foundUserReview)
@@ -160,7 +158,7 @@ middlewareObj.checkReviewExistence = async function (req, res, next) {
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
+            req.flash("error", "Something went wrong in checkReviewExistence()");
             res.redirect("back");
         }
 
