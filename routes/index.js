@@ -58,7 +58,7 @@ router.post("/register", async function(req, res) {
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
+        req.flash("error", "Something went wrong in register POST");
         res.redirect("back");
     }
 });
@@ -153,7 +153,7 @@ router.get("/follow/:id", middleware.isLoggedIn, async function(req, res) {
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
+        req.flash("error", "Something went wrong in follow GET");
         res.redirect("back");
     }
 });
@@ -180,7 +180,7 @@ router.get("/notifications", middleware.isLoggedIn, async function(req, res) {
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
+        req.flash("error", "Something went wrong in notifications GET");
         res.redirect("back");
     }
 });
@@ -205,7 +205,7 @@ router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res)
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
+        req.flash("error", "Something went wrong in notifications GET");
         res.redirect("back");
     }
 });
@@ -306,7 +306,7 @@ router.get("/reset/:token", async function(req, res)
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
+        req.flash("error", "Something went wrong in reset GET");
         res.redirect("back");
     }
 });
