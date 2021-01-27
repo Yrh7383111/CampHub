@@ -3,15 +3,14 @@ const passportLocalMongoose = require("passport-local-mongoose");
 
 
 
-const UserSchema = new mongoose.Schema
-({
+const UserSchema = new mongoose.Schema({
     // Basic information
-    username: {type: String, unique: true, required: true},
+    username: { type: String, unique: true, required: true },
     password: String,
     avatar: String,
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
-    email: {type: String, unique: true, required: true},
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, unique: true, required: true },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     // Admin User Role Authorization
@@ -31,10 +30,13 @@ const UserSchema = new mongoose.Schema
     followers: [
         {
             type: mongoose.Schema.Types.ObjectId,
+            // Refer to User Collection schema
+            // module.exports = mongoose.model("User", UserSchema)
             ref: 'User'
         }
     ]
 });
+
 
 
 // "User.authenticate()" - from "UserSchema.plugin(passportLocalMongoose)"

@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 
 
 // Comment Collection schema
-const commentSchema = mongoose.Schema
-({
+const commentSchema = mongoose.Schema({
     // Author
     author: {
         // "id" is a reference to a User Collection "id"
@@ -26,6 +25,7 @@ const commentSchema = mongoose.Schema
     // Comment text
     text: String
 });
+
 
 
 // Create a new Collection named "comments" (pluralize) in the database,

@@ -5,8 +5,7 @@ const Review = require("./review");
 
 
 // Campground Collection schema
-const campgroundSchema = new mongoose.Schema
-({
+const campgroundSchema = new mongoose.Schema({
     // Basic information
     name: String,
     price: String,
@@ -73,6 +72,7 @@ const campgroundSchema = new mongoose.Schema
         default: 0
     }
 });
+
 
 
 // Create a new Collection named "campgrounds" (pluralize) in the database,

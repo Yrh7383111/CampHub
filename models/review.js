@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 
 
 // Review Collections schema
-const reviewSchema = new mongoose.Schema
-({
+const reviewSchema = new mongoose.Schema({
     // Rating
     rating: {
         type: Number,
@@ -51,6 +50,7 @@ const reviewSchema = new mongoose.Schema
     // mongoose assigns createdAt and updatedAt fields to your schema, and the type assigned is Date.
     timestamps: true
 });
+
 
 
 // Create a new Collection named "reviews" (pluralize) in the database,
