@@ -148,7 +148,7 @@ middlewareObj.checkReviewExistence = async function (req, res, next) {
             if (foundUserReview)
             {
                 req.flash("error", "You already wrote a review.");
-                return res.redirect("/campgrounds/" + foundCampground._id);
+                res.redirect("/campgrounds/" + foundCampground._id);
             }
             else {
                 // If the review was not found, go to the next middleware

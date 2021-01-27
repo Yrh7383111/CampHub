@@ -8,17 +8,14 @@ const middleware = require("../middleware");
 
 
 // NEW - Show the form to add a new comment to a particular campground
-// Functionality: Allow users to add new comments
 // Invoke "app.get("/campgrounds/:id/comments/new", function(req, res)"
 // Hide the functionality - add a new comment, to User who is not logged in
 // isLoggedIn - Middleware
 router.get("/new", middleware.isLoggedIn, async function(req, res) {
-    // Find campground by id
-
-    // "req.params.id" refers to the "id" of a particular campground
-    // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
     try
     {
+        // "req.params.id" refers to the "id" of a particular campground
+        // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
         const foundCampground = await Campground.findById(req.params.id);
         if (!foundCampground)
         {
@@ -26,29 +23,25 @@ router.get("/new", middleware.isLoggedIn, async function(req, res) {
             return res.redirect("back");
         }
         // Else
-        // Direct to "new.ejs" in "comments" directory
-        res.render("comments/new", {campground: foundCampground});
+        res.render("comments/new", { campground: foundCampground });
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in comments GET new");
+        res.redirect("back");
     }
 });
 
 
 // CREATE - Add a new comment (req.body.comment) to the database
 // Invoke "app.post("/campgrounds/:id/comments", function(req, res)"
-// Hide the functionality - add a new comment, to User who is not logged in
 // isLoggedIn - Middleware
 router.post("/", middleware.isLoggedIn, async function(req, res) {
-    // Lookup campground using ID
-
-    // "req.params.id" refers to the "id" of a particular campground
-    // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
     try
     {
+        // "req.params.id" refers to the "id" of a particular campground
+        // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
         let foundCampground = await Campground.findById(req.params.id);
         if (!foundCampground)
         {
@@ -60,37 +53,32 @@ router.post("/", middleware.isLoggedIn, async function(req, res) {
         {
             let comment = await Comment.create(req.body.comment);
 
-            // Add username and id to comment
+            // Attach username and id to comment
             // "comment.author.id" needs to match Comment Data Model
             comment.author.id = req.user._id;
             // "comment.author.username" needs to match Comment Data Model
             comment.author.username = req.user.username;
-            // Save comment
             comment.save();
 
-            // "campground.comments" is an array
+            // Add comment to comments array
             foundCampground.comments.push(comment);
-            // Save campground
             foundCampground.save();
 
             req.flash("success", "Your comment was successfully added.");
-            // Invoke "app.get(app.get("/campgrounds/:id, function(req, res)"
-            // Direct to "show.ejs" in "campgrounds" directory
             res.redirect('/campgrounds/' + foundCampground._id);
-
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in comments POST");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in comments POST");
+        res.redirect("back");
     }
 });
 
@@ -100,6 +88,8 @@ router.post("/", middleware.isLoggedIn, async function(req, res) {
 router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function(req, res) {
     try
     {
+        // "req.params.id" refers to the "id" of a particular campground
+        // Corresponds to "app.use("/campgrounds/:id/comments", commentRoutes)" (code) in "app.js" (file)
         const foundCampground = await Campground.findById(req.params.id);
         if (!foundCampground)
         {
@@ -118,20 +108,20 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
                 return res.redirect("back");
             }
             // Else
-            res.render("comments/edit", {campground_id: req.params.id, comment: foundComment});
+            res.render("comments/edit", { campground_id: req.params.id, comment: foundComment });
         }
         catch(err)
         {
             console.log(err.message);
-            req.flash("error", "Something went wrong");
-            return res.redirect("back");
+            req.flash("error", "Something went wrong in comments GET edit");
+            res.redirect("back");
         }
     }
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in comments GET edit");
+        res.redirect("back");
     }
 });
 
@@ -139,11 +129,11 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
 // UPDATE - Update a existing comment to the database
 // Invoke "app.put("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
 router.put("/:comment_id", middleware.checkCommentOwnership, async function(req, res) {
-    // "req.params.comment_id" refers to the "id" of a particular comment
-    // Corresponds "router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
     try
     {
-        let updatedComment = await Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment);
+        // "req.params.comment_id" refers to the "id" of a particular comment
+        // Corresponds "router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res)"
+        await Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment);
 
         req.flash("success", "Your comment was successfully edited.");
         res.redirect("/campgrounds/" + req.params.id );
@@ -151,8 +141,8 @@ router.put("/:comment_id", middleware.checkCommentOwnership, async function(req,
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in comments PUT");
+        res.redirect("back");
     }
 });
 
@@ -172,8 +162,8 @@ router.delete("/:comment_id", middleware.checkCommentOwnership, async function(r
     catch(err)
     {
         console.log(err.message);
-        req.flash("error", "Something went wrong");
-        return res.redirect("back");
+        req.flash("error", "Something went wrong in comments DELETE");
+        res.redirect("back");
     }
 });
 
