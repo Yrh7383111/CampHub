@@ -66,15 +66,12 @@ passport.deserializeUser(User.deserializeUser());
 // Middleware which runs for all Routes
 app.use(async function(req, res, next) {
     res.locals.currentUser = req.user;
-    if (req.user)
-    {
-        try
-        {
+    if (req.user) {
+        try {
             const user = await User.findById(req.user._id).populate("notifications", null, { isRead: false }).exec();
             res.locals.notifications = user.notifications.reverse();
         }
-        catch(err)
-        {
+        catch(err) {
             console.log(err.message);
             req.flash("error", "Something went wrong");
             return res.redirect("back");
