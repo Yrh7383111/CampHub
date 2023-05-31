@@ -12,19 +12,16 @@ const middleware = require("../middleware");
 // Hide the functionality - add a new comment, to User who is not logged in
 // isLoggedIn - Middleware
 router.get("/new", middleware.isLoggedIn, async function(req, res) {
-    try
-    {
+    try {
         const foundCampground = await Campground.findById(req.params.id);
-        if (!foundCampground)
-        {
+        if (!foundCampground) {
             req.flash("error", "Campground not found");
             return res.redirect("back");
         }
         // Else
         res.render("comments/new", { campground: foundCampground });
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in comments GET new");
         res.redirect("back");
@@ -36,17 +33,14 @@ router.get("/new", middleware.isLoggedIn, async function(req, res) {
 // Invoke "app.post("/campgrounds/:id/comments", function(req, res)"
 // isLoggedIn - Middleware
 router.post("/", middleware.isLoggedIn, async function(req, res) {
-    try
-    {
+    try {
         let foundCampground = await Campground.findById(req.params.id);
-        if (!foundCampground)
-        {
+        if (!foundCampground) {
             req.flash("error", "Campground not found");
             return res.redirect("back");
         }
         // Else
-        try
-        {
+        try {
             let comment = await Comment.create(req.body.comment);
 
             // "comment.author.id" needs to match Comment Data Model
@@ -61,15 +55,13 @@ router.post("/", middleware.isLoggedIn, async function(req, res) {
             req.flash("success", "Your comment was successfully added.");
             res.redirect('/campgrounds/' + foundCampground._id);
         }
-        catch(err)
-        {
+        catch(err) {
             console.log(err.message);
             req.flash("error", "Something went wrong in comments POST");
             res.redirect("back");
         }
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in comments POST");
         res.redirect("back");
@@ -80,35 +72,29 @@ router.post("/", middleware.isLoggedIn, async function(req, res) {
 // Edit - Show the form to edit a existing comment
 // Invoke "app.get("/campgrounds/:id/comments/:comment_id/edit", middleware.checkCommentOwnership, function(req, res)"
 router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function(req, res) {
-    try
-    {
+    try {
         const foundCampground = await Campground.findById(req.params.id);
-        if (!foundCampground)
-        {
+        if (!foundCampground) {
             req.flash("error", "Campground not found");
             return res.redirect("back");
         }
         // Else
-        try
-        {
+        try {
             const foundComment = await Comment.findById(req.params.comment_id);
-            if (!foundComment)
-            {
+            if (!foundComment) {
                 req.flash("error", "Comment not found");
                 return res.redirect("back");
             }
             // Else
             res.render("comments/edit", { campground_id: req.params.id, comment: foundComment });
         }
-        catch(err)
-        {
+        catch(err) {
             console.log(err.message);
             req.flash("error", "Something went wrong in comments GET edit");
             res.redirect("back");
         }
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in comments GET edit");
         res.redirect("back");
@@ -119,15 +105,13 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, async function
 // UPDATE - Update a existing comment to the database
 // Invoke "app.put("/campgrounds/:id/comments/:comment_id", middleware.checkCommentOwnership, function(req, res)"
 router.put("/:comment_id", middleware.checkCommentOwnership, async function(req, res) {
-    try
-    {
+    try {
         await Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment);
 
         req.flash("success", "Your comment was successfully edited.");
         res.redirect("/campgrounds/" + req.params.id );
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in comments PUT");
         res.redirect("back");
@@ -138,21 +122,18 @@ router.put("/:comment_id", middleware.checkCommentOwnership, async function(req,
 // DELETE - Delete a existing comment
 // Invoke "app.delete("/campgrounds/:id/comments/:comment_id", middleware.checkCommentOwnership, function(req, res)"
 router.delete("/:comment_id", middleware.checkCommentOwnership, async function(req, res) {
-    try
-    {
+    try {
         await Comment.findByIdAndRemove(req.params.comment_id);
 
         req.flash("success", "Your comment was successfully deleted.");
         res.redirect("/campgrounds/" + req.params.id);
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in comments DELETE");
         res.redirect("back");
     }
 });
-
 
 
 // Export "router"
