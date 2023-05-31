@@ -12,8 +12,7 @@ const crypto = require("crypto");
 
 
 // Invoke "app.get("/", function(req, res)"
-router.get("/", function(req, res)
-{
+router.get("/", function(req, res) {
     res.render("landing");
 });
 
@@ -38,13 +37,11 @@ router.post("/register", async function(req, res) {
     });
 
     // Admin User Role Authorization
-    if (req.body.adminCode === "secretcode")
-    {
+    if (req.body.adminCode === "secretcode") {
         newUser.isAdmin = true;
     }
 
-    try
-    {
+    try {
         // Hash "req.body.password"
         // and then save it into the database
         const user = await User.register(newUser, req.body.password);
@@ -55,8 +52,7 @@ router.post("/register", async function(req, res) {
             res.redirect("/campgrounds");
         });
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in register POST");
         res.redirect("back");
@@ -96,35 +92,29 @@ router.get("/logout", function(req, res) {
 // SHOW - Show more information about one user
 // Invoke "app.get("/users/:id", function(req, res)"
 router.get("/users/:id", async function(req, res) {
-    try
-    {
+    try {
         const foundUser = await User.findById(req.params.id).populate("followers");
-        if (!foundUser)
-        {
+        if (!foundUser) {
             req.flash("error", "User not found");
             return res.redirect("back");
         }
         // Else
-        try
-        {
+        try {
             const foundCampgrounds = await Campground.find().where("author.id").equals(foundUser._id);
-            if (!foundCampgrounds)
-            {
+            if (!foundCampgrounds) {
                 req.flash("error", "Campground not found");
                 return res.redirect("back");
             }
             // Else
             res.render("users/show", {user: foundUser, campgrounds: foundCampgrounds});
         }
-        catch(err)
-        {
+        catch(err) {
             console.log(err.message);
             req.flash("error", "Something went wrong in users GET");
             res.redirect("back");
         }
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in users GET");
         res.redirect("back");
@@ -135,11 +125,9 @@ router.get("/users/:id", async function(req, res) {
 // Follow user
 // Invoke "app.get("/follow/:id", function(req, res)"
 router.get("/follow/:id", middleware.isLoggedIn, async function(req, res) {
-    try
-    {
+    try {
         let foundUser = await User.findById(req.params.id);
-        if (!foundUser)
-        {
+        if (!foundUser) {
             req.flash("error", "User not found");
             return res.redirect("back");
         }
@@ -150,8 +138,7 @@ router.get("/follow/:id", middleware.isLoggedIn, async function(req, res) {
         req.flash("success", "Successfully followed " + foundUser.username + "!");
         res.redirect("/users/" + req.params.id);
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in follow GET");
         res.redirect("back");
@@ -162,14 +149,12 @@ router.get("/follow/:id", middleware.isLoggedIn, async function(req, res) {
 // View all notifications
 // Invoke "app.get("/notifications", function(req, res)"
 router.get("/notifications", middleware.isLoggedIn, async function(req, res) {
-    try
-    {
+    try {
         const foundUser = await User.findById(req.user._id).populate({
             path: "notifications",
             options: { sort: { "_id": -1 } }
         });
-        if (!foundUser)
-        {
+        if (!foundUser) {
             req.flash("error", "User not found");
             return res.redirect("back");
         }
@@ -177,8 +162,7 @@ router.get("/notifications", middleware.isLoggedIn, async function(req, res) {
         let allNotifications = foundUser.notifications;
         res.render("notifications/index", { allNotifications: allNotifications });
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in notifications GET");
         res.redirect("back");
@@ -189,11 +173,9 @@ router.get("/notifications", middleware.isLoggedIn, async function(req, res) {
 // Handle notifications
 // Invoke "app.get("/notifications/:id", function(req, res)"
 router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res) {
-    try
-    {
+    try {
         let foundNotification = await Notification.findById(req.params.id);
-        if (!foundNotification)
-        {
+        if (!foundNotification) {
             req.flash("error", "Notification not found");
             return res.redirect("back");
         }
@@ -202,8 +184,7 @@ router.get("/notifications/:id", middleware.isLoggedIn, async function(req, res)
         foundNotification.save();
         res.redirect(`/campgrounds/${ foundNotification.campgroundId }`);
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in notifications GET");
         res.redirect("back");
@@ -225,8 +206,7 @@ router.post("/forgot", function(req, res, next) {
     async.waterfall([
         // Generate hex code for the token
         function(done) {
-            crypto.randomBytes(20, function(err, buf)
-            {
+            crypto.randomBytes(20, function(err, buf) {
                 const token = buf.toString("hex");
                 done(err, token);
             });
@@ -235,16 +215,14 @@ router.post("/forgot", function(req, res, next) {
         // Generate the token
         function(token, done) {
             User.findOne({ email: req.body.email }, function(err, user) {
-                if (!user)
-                {
+                if (!user) {
                     req.flash("error", "No account with that email address exists.");
                     return res.redirect("/forgot");
                 }
                 // Else
                 user.resetPasswordToken = token;
                 user.resetPasswordExpires = Date.now() + 3600000;
-                user.save(function(err)
-                {
+                user.save(function(err) {
                     done(err, token, user);
                 });
             });
@@ -276,8 +254,7 @@ router.post("/forgot", function(req, res, next) {
             });
         }
     ], function(err) {
-        if (err)
-        {
+        if (err) {
             console.log(err.message);
             req.flash("error", "Something went wrong");
             return res.redirect("back");
@@ -292,19 +269,16 @@ router.post("/forgot", function(req, res, next) {
 // Invoke "app.get("/reset/:token", function(req, res)"
 router.get("/reset/:token", async function(req, res)
 {
-    try
-    {
+    try {
         const foundUser = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
-        if (!foundUser)
-        {
+        if (!foundUser) {
             req.flash("error", "Password reset token is invalid or has expired.");
             return res.redirect("/forgot");
         }
         // Else
         res.render("reset", {token: req.params.token});
     }
-    catch(err)
-    {
+    catch(err) {
         console.log(err.message);
         req.flash("error", "Something went wrong in reset GET");
         res.redirect("back");
@@ -319,13 +293,11 @@ router.post("/reset/:token", function(req, res) {
     async.waterfall([
         function(done) {
             User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
-                if (!user)
-                {
+                if (!user) {
                     req.flash("error", "Password reset token is invalid or has expired.");
                     return res.redirect("back");
                 }
-                if (req.body.password !== req.body.confirm)
-                {
+                if (req.body.password !== req.body.confirm) {
                     req.flash("error", "Passwords do not match.");
                     return res.redirect("back");
                 }
@@ -360,15 +332,13 @@ router.post("/reset/:token", function(req, res) {
                 text: "Hello,\n\n" +
                     "This is a confirmation that the password for your account " + user.email + " has just been changed.\n"
             };
-            smtpTransport.sendMail(mailOptions, function(err)
-            {
+            smtpTransport.sendMail(mailOptions, function(err) {
                 req.flash("success", "Your password was successfully changed.");
                 done(err);
             });
         }
     ], function(err) {
-        if (err)
-        {
+        if (err) {
             console.log(err.message);
             req.flash("error", "Something went wrong");
             return res.redirect("back");
@@ -377,7 +347,6 @@ router.post("/reset/:token", function(req, res) {
         res.redirect("/campgrounds");
     });
 });
-
 
 
 // Export "router"
