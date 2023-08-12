@@ -16,7 +16,7 @@ Database: MongoDB
 
 Back-end: Node.js, Express and other npm packages
 
-Features: Login, Search, Profile, Map, Comment, Review and Notification
+Features: Global Search, Personal Profile, Google Map, Comment, Review and Notification
 ```
 
 
