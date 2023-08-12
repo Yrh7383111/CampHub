@@ -1,5 +1,5 @@
 # CampHub 
-CampHub is an interactive graphic website which allows users to read, post, edit and delete campground info, with additional functionalities including review, comment and giving likes.
+CampHub is an interactive graphic website which allows users to manage their campgrounds with unique functionalities, including global search, profile, comment, review and notification.
 
 
 ## Project Setup
@@ -10,13 +10,13 @@ nodemon app.js
 
 ## Development Stack
 ```
-Front-end: HTML/CSS, Bootstrap 4, jQuery
+Front-end: HTML, CSS, Bootstrap 4, jQuery
 
 Database: MongoDB
 
-Back-end: Node.js, Express, EJS, and other npm packages
+Back-end: Node.js, Express and other npm packages
 
-Features: Authentication, Fuzzy Search, Google Map API, Image Upload, Pagination and User Notification
+Features: Login, Search, Profile, Map, Comment, Review and Notification
 ```
 
 
