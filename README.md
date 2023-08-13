@@ -1,5 +1,5 @@
 # CampHub 
-CampHub is an data sharing website which allows fans to manage their campgrounds with unique functionalities, including global search, profile, comment, review and notification.
+CampHub is a data-sharing website which allows fans to manage their campgrounds with unique functionalities, including global search, profile, map, comment, review and notification.
 
 
 ## Project Setup
@@ -16,7 +16,7 @@ Database: MongoDB
 
 Back-end: Node.js, Express and other npm packages
 
-Features: Global Search, Personal Profile, Google Map, Comment, Review and Notification
+Features: Fuzzy Search, Personal Profile, Google Map, Comment, Review and Notification
 ```
 
 
