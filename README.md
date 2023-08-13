@@ -1,5 +1,5 @@
 # CampHub 
-CampHub is an interactive graphic website which allows users to manage their campgrounds with unique functionalities, including global search, profile, comment, review and notification.
+CampHub is an data sharing website which allows fans to manage their campgrounds with unique functionalities, including global search, profile, comment, review and notification.
 
 
 ## Project Setup
