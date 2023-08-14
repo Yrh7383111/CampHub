@@ -26,15 +26,15 @@ Features: Fuzzy Search, Personal Profile, Google Map, Comment, Review and Notifi
 ![Startup Page](https://github.com/Yrh7383111/CampHub/blob/master/visualizations/Starup%20Page.png)
 
 ### Main Page
-1. Main Page 1
+#### Main Page 1
 ![Main Page 1](https://github.com/Yrh7383111/CampHub/blob/master/visualizations/Main%20Page%20%231.png)
-2. Main Page 2
+#### Main Page 2
 ![Main Page 2](https://github.com/Yrh7383111/CampHub/blob/master/visualizations/Main%20Page%20%232.png)
 
 ### Campground Main Page
-1. Campground Main Page 1
+#### Campground Main Page 1
 ![Campground Main Page 1](https://github.com/Yrh7383111/CampHub/blob/master/visualizations/Camp%20Main%20%231.png)
-2. Campground Main Page 2
+#### Campground Main Page 2
 ![Campground Main Page 2](https://github.com/Yrh7383111/CampHub/blob/master/visualizations/Camp%20Main%20%232.png)
 
 ### Review Page
